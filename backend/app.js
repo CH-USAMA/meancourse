@@ -1,12 +1,39 @@
 const express = require('express');
+
+const bodyParser = require('body-parser');
 const app = express(); //a big chain of middlewares
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
 // function syntax ()=>{}
 // app.use((req,res,next)=>{
 //   console.log('I am in a middleware');
 //   next();
 // });
 
-app.use('/api/posts',(req,res,next)=>{
+app.use((req,res,next)=>{
+  res.setHeader("Access-Control-Allow-Origin","*");
+  res.setHeader("Access-Control-Allow-Headers",
+  "Origin ,X-Requested-With, Content-Type, Accept");
+
+  res.setHeader("Access-Control-Allow-Methods",
+  "GET, POST, PATCH, DELETE, OPTIONS");
+
+  next();
+}); //04:06 48%
+
+app.post("/api/posts",(req,res,next)=>{
+  const post =  req.body;
+  console.log(post);
+  res.status(201).json({
+    message : "post added successfully"
+  });
+  // code 200 means everything is ok
+  // 201 means everythingis ok while new resource was created
+})
+
+app.get('/api/posts',(req,res,next)=>{
   const posts = [
     {
       id:"1",
